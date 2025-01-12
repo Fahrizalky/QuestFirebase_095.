@@ -1,3 +1,5 @@
+package com.example.activityfirebash.viewmodel
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,11 +12,17 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 
+sealed class HomeUiState{
+    data class Success(val mahasiswa: List<Mahasiswa>): HomeUiState()
+    data class Error(val message: Throwable): HomeUiState()
+    object Loading: HomeUiState()
+
+}
 
 class HomeViewModel(
     private val mhs: MahasiswaRepository
 ): ViewModel() {
-    var mhsUIState: HomeUiState by mutableStateOf(HomeUiState.Loading)
+    var mhsUiState: HomeUiState by mutableStateOf(HomeUiState.Loading)
         private set
 
     init {
@@ -25,24 +33,32 @@ class HomeViewModel(
         viewModelScope.launch {
             mhs.getMahasiswa()
                 .onStart {
-                    mhsUIState = HomeUiState.Loading
+                    mhsUiState = HomeUiState.Loading
                 }
                 .catch {
-                    mhsUIState = HomeUiState.Error(it)
+                    mhsUiState = HomeUiState.Error(it)
                 }
                 .collect {
-                    mhsUIState = if (it.isEmpty()) {
-                        HomeUiState.Error(Exception("Belum ada daftar Mahasiswa"))
-                    } else {
-                        HomeUiState.Succsess(it)
-                    }
+                    mhsUiState =
+                        if (it.isEmpty()){
+                            HomeUiState.Error(Exception("Belum ada data mahasiswa"))
+                        }
+                        else{
+                            HomeUiState.Success(it)
+                        }
                 }
         }
     }
+
+    fun deleteMhs(mahasiswa: Mahasiswa){
+        viewModelScope.launch {
+            try{
+                mhs.deleteMahasiswa(mahasiswa)
+            } catch (e: Exception){
+                mhsUiState = HomeUiState.Error(e)
+            }
+        }
+    }
+
 }
 
-sealed class HomeUiState{
-    data class Succsess(val mahasiswa: List<Mahasiswa>): HomeUiState()
-    data class Error(val exception: Throwable) : HomeUiState()
-    object Loading : HomeUiState()
-}
