@@ -13,5 +13,4 @@ class MahasiswaContainer : AppContainer{
     override val mahasiswaRepository: MahasiswaRepository by lazy {
         NetworkMahasiswaRepository(firestore)
     }
-
 }
