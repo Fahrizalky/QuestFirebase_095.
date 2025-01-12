@@ -1,12 +1,13 @@
 package com.example.activityfirebash.model
 
 class Mahasiswa (
-    val nim : String,
+    val nim: String,
     val nama: String,
-    val alamat : String,
-    val jenis_kelamin : String,
     val kelas : String,
-    val angkatan : String
+    val jenis_kelamin : String,
+    val angkatan : String,
+    val alamat : String
+
 ){
-    constructor():this("","","","","","")
+    constructor():this("","","","","","" )
 }
