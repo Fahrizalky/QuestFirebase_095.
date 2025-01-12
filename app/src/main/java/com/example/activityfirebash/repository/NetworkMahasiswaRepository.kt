@@ -52,8 +52,6 @@ class NetworkMahasiswaRepository (
     }
 
 
-
-
     override suspend fun deleteMahasiswa(mahasiswa: Mahasiswa) {
         try {
             firestore.collection("Mahasiswa")
@@ -64,6 +62,8 @@ class NetworkMahasiswaRepository (
             throw Exception("Gagal menghapus data mahasiswa: ${e.message}")
         }
     }
+
+
 
     override suspend fun getMahasiswaById(nim: String): Flow<Mahasiswa> = callbackFlow{
         val mhsDocument = firestore.collection("Mahasiswa")
