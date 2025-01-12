@@ -120,3 +120,4 @@ data class MahasiswaEvent(
     val kelas: String = "",
     val angkatan: String = "",
 )
+
