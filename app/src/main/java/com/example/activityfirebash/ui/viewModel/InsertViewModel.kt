@@ -43,6 +43,7 @@ class InsertViewModel(
         uiEvent = uiEvent.copy(isEntryValid = errorState)
         return errorState.isValid()
     }
+
     fun insertMhs(){
         if (validateFields()){
             viewModelScope.launch {
